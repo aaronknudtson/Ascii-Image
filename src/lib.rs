@@ -90,10 +90,18 @@ impl AsciiImage {
                 let (tw, th) = terminal_size()?;
                 let mut w = tw as u32;
                 let mut h = th as u32;
-                if w > h {
+                if w >= h {
                     w = ((h as f64 / img.height() as f64) * img.width() as f64) as u32;
+                    if (tw as u32) < w * 2 {
+                        w = tw as u32 / 2;
+                        h = ((w as f64 / img.width() as f64) * img.height() as f64) as u32;
+                    } 
                 } else {
                     h = ((w as f64 / img.width() as f64) * img.height() as f64) as u32;
+                    if (th as u32) < h * 2 {
+                        h = th as u32 / 2;
+                        w = ((h as f64 / img.height() as f64) * img.width() as f64) as u32;
+                    }
                 }
                 img.resize_exact(w * 2, h.into(), filter_type)
             },
