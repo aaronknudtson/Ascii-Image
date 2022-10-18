@@ -70,9 +70,14 @@ impl AsciiImage {
 
     pub fn from_path(path: &std::path::PathBuf, filter: &Option<Filter>, resize_args: ResizeArgs) -> Result<AsciiImage> {
         let img = open_image(&path).with_context(|| "Failed to open image")?;
+        let ascii = Self::from_image(&img, filter, resize_args)?;
+        Ok(ascii)
+    }
+
+    pub fn from_image(img: &image::DynamicImage, filter: &Option<Filter>, resize_args: ResizeArgs) -> Result<AsciiImage> {
         let filter_type = filter.unwrap_or(Filter::Triangle).to_filter_type();
         let img = match resize_args {
-            ResizeArgs::TrueOriginal => img, // do not resize
+            ResizeArgs::TrueOriginal => img.clone(), // do not resize
             ResizeArgs::Original => img.resize_exact(img.width() * 2, img.height(), filter_type),
             ResizeArgs::Width(w) => {
                 let h = ((w as f64 / img.width() as f64) * img.height() as f64) as u32;
@@ -87,29 +92,31 @@ impl AsciiImage {
             },
             ResizeArgs::Terminal => {
                 // maintain aspect ratio manually but twice as wide since terminal is 1x2
-                let (tw, th) = terminal_size()?;
-                let mut w = tw as u32;
-                let mut h = th as u32;
-                if w >= h {
-                    w = ((h as f64 / img.height() as f64) * img.width() as f64) as u32;
-                    if (tw as u32) < w * 2 {
-                        w = tw as u32 / 2;
-                        h = ((w as f64 / img.width() as f64) * img.height() as f64) as u32;
-                    } 
-                } else {
-                    h = ((w as f64 / img.width() as f64) * img.height() as f64) as u32;
-                    if (th as u32) < h * 2 {
-                        h = th as u32 / 2;
+                if atty::is(atty::Stream::Stdout) {
+                    let (tw, th) = terminal_size()?;
+                    let mut w = tw as u32;
+                    let mut h = th as u32;
+                    if w >= h {
                         w = ((h as f64 / img.height() as f64) * img.width() as f64) as u32;
+                        if (tw as u32) < w * 2 {
+                            w = tw as u32 / 2;
+                            h = ((w as f64 / img.width() as f64) * img.height() as f64) as u32;
+                        } 
+                    } else {
+                        h = ((w as f64 / img.width() as f64) * img.height() as f64) as u32;
+                        if (th as u32) < h * 2 {
+                            h = th as u32 / 2;
+                            w = ((h as f64 / img.height() as f64) * img.width() as f64) as u32;
+                        }
                     }
+                    img.resize_exact(w * 2, h.into(), filter_type)
+                } else {
+                    img.clone()
                 }
-                img.resize_exact(w * 2, h.into(), filter_type)
             },
         };
-        let ascii = AsciiImage::to_ascii(&img)?;
-        Ok(ascii)
+        AsciiImage::to_ascii(&img)
     }
-
 
     const BRIGHTNESS: &str = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. "; 
     pub fn map_char(pixel: usize) -> char {

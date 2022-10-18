@@ -7,6 +7,7 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.65"
+atty = "0.2.14"
 clap = { version = "4.0.15", features = ["derive"] }
 image = "0.24.4"
 png = "0.17.6"
