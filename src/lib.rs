@@ -46,9 +46,10 @@ impl AsciiImage {
     }
 
     pub fn write_to_file(&self, path: &std::path::PathBuf) -> Result<()> {
-        let mut file = std::fs::File::create(path)?;
+        let f = std::fs::File::create(path)?;
+        let mut f = std::io::BufWriter::new(f);
         for i in &self.image {
-            write!(file, "{}", i).with_context(|| "Failed to write to file")?;
+            f.write(format!("{}\n", i).as_bytes()).with_context(|| "Failed to write to file")?;
         }
         Ok(())
     }
@@ -69,7 +70,7 @@ impl AsciiImage {
     }
 
     pub fn from_path(path: &std::path::PathBuf, filter: &Option<Filter>, resize_args: ResizeArgs) -> Result<AsciiImage> {
-        let img = open_image(&path).with_context(|| "Failed to open image")?;
+        let img = open_image(&path)?;
         let ascii = Self::from_image(&img, filter, resize_args)?;
         Ok(ascii)
     }
@@ -136,7 +137,7 @@ impl std::fmt::Display for AsciiImage {
 
 
 fn open_image(path: &std::path::PathBuf) -> Result<DynamicImage> {
-    let img = image::open(path)?;
+    let img = image::open(path).with_context(|| format!("Failed to open image at provided path: {:?}", path))?;
     Ok(img)
 }
 

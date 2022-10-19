@@ -1,14 +1,25 @@
 [package]
-name = "ascii-image"
+name = "asciifire"
 version = "0.1.0"
 edition = "2021"
+authors = "Aaron Knudtson"
+licence = "MIT"
+description = "Library and CLI to convert images into surprisingly accurate ascii representation"
+readme = "README.md"
+homepage = "https://github.com/aaronknudtson/asciifire"
+repository = "https://github.com/aaronknudtson/asciifire"
+keywords = ["cli", "image", "ascii", "creative", "fire"]
+categories = ["command-line-utilities", "library"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 anyhow = "1.0.65"
+assert_cmd = "2.0.4"
+assert_fs = "1.0.7"
 atty = "0.2.14"
 clap = { version = "4.0.15", features = ["derive"] }
 image = "0.24.4"
 png = "0.17.6"
+predicates = "2.1.1"
 termion = "1.5.6"
