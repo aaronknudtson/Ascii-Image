@@ -3,3 +3,6 @@
 *.jpeg
 *.png
 *.txt
+!Savior.jpeg
+!/images
+!/images/*

@@ -14,7 +14,7 @@
 A Library and CLI for converting images into ASCII characters of varying "density".
 
 ## Install
-Make sure you have cargo installed. [Help can be found in the rust book.](https://doc.rust-lang.org/cargo/getting-started/installation.html).
+Make sure you have cargo installed. [Help can be found here.](https://doc.rust-lang.org/cargo/getting-started/installation.html)
 
 Once cargo is installed, open a terminal and run
 ```rust
