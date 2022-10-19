@@ -9,7 +9,7 @@ readme = "README.md"
 homepage = "https://github.com/aaronknudtson/asciifire"
 repository = "https://github.com/aaronknudtson/asciifire"
 keywords = ["cli", "image", "ascii", "creative", "fire"]
-categories = ["command-line-utilities", "library"]
+categories = ["command-line-utilities", "multimedia", "multimedia::images"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

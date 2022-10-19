@@ -7,7 +7,7 @@ use predicates::prelude::*;
 
 #[test]
 fn fails_on_fake_file() -> Result<(), Box<dyn std::error::Error>> {
-    Command::cargo_bin("ascii-image")?
+    Command::cargo_bin("asciifire")?
         .arg("/test/doesnt/exist")
         .assert()
         .failure()
@@ -18,7 +18,7 @@ fn fails_on_fake_file() -> Result<(), Box<dyn std::error::Error>> {
 #[test]
 fn is_successful() -> Result<(), Box<dyn std::error::Error>> {
     let path = current_dir()?;
-    Command::cargo_bin("ascii-image")?
+    Command::cargo_bin("asciifire")?
         .arg(path.join("Savior.jpeg"))
         .assert()
         .success();
@@ -33,7 +33,7 @@ fn height_only() -> Result<(), Box<dyn std::error::Error>> {
     let input_file = temp.child("foo.txt");
     input_file.touch()?;
 
-    Command::cargo_bin("ascii-image")?
+    Command::cargo_bin("asciifire")?
         .arg(path.join("Savior.jpeg"))
         .arg("-o").arg(input_file.path())
         .arg("--height").arg(height.to_string())
@@ -55,7 +55,7 @@ fn width_only() -> Result<(), Box<dyn std::error::Error>> {
     let input_file = temp.child("foo.txt");
     input_file.touch()?;
 
-    Command::cargo_bin("ascii-image")?
+    Command::cargo_bin("asciifire")?
         .arg(path.join("Savior.jpeg"))
         .arg("-o").arg(input_file.path())
         .arg("--width").arg(width.to_string())
@@ -78,7 +78,7 @@ fn height_and_width() -> Result<(), Box<dyn std::error::Error>> {
     let input_file = temp.child("foo.txt");
     input_file.touch()?;
 
-    Command::cargo_bin("ascii-image")?
+    Command::cargo_bin("asciifire")?
         .arg(path.join("Savior.jpeg"))
         .arg("-o").arg(input_file.path())
         .arg("--width").arg(width.to_string())
@@ -103,7 +103,7 @@ fn output_only() -> Result<(), Box<dyn std::error::Error>> {
     let input_file = temp.child("foo.txt");
     input_file.touch()?;
 
-    Command::cargo_bin("ascii-image")?
+    Command::cargo_bin("asciifire")?
         .arg(path.join("Savior.jpeg"))
         .arg("-o").arg(input_file.path())
         .assert()
