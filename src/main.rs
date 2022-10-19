@@ -1,4 +1,4 @@
-use ascii_image::AsciiImage;
+use asciifire::{AsciiImage, ResizeArgs};
 use clap::Parser;
 use anyhow::Result;
 
@@ -21,18 +21,18 @@ struct Args {
     /// filter type to resize by
     #[arg(short, long)]
     // filter: Option<image::imageops::FilterType>, 
-    filter: Option<ascii_image::Filter>, 
+    filter: Option<asciifire::Filter>, 
 }
 
 fn main() -> Result<()> {
     let args = Args::parse();
     // define desired behavior for CLI args
     let resize_args = match (&args.width, &args.height, &args.output) {
-        (None, None, None) => ascii_image::ResizeArgs::Terminal,
-        (None, None, Some(_)) => ascii_image::ResizeArgs::Original,
-        (&Some(w), None, _) => ascii_image::ResizeArgs::Width(w),
-        (None, &Some(h), _) => ascii_image::ResizeArgs::Height(h),
-        (&Some(w), &Some(h), _) => ascii_image::ResizeArgs::WidthAndHeight(w, h),
+        (None, None, None) => ResizeArgs::Terminal,
+        (None, None, Some(_)) => ResizeArgs::Original,
+        (&Some(w), None, _) => ResizeArgs::Width(w),
+        (None, &Some(h), _) => ResizeArgs::Height(h),
+        (&Some(w), &Some(h), _) => ResizeArgs::WidthAndHeight(w, h),
     };
     let ascii = AsciiImage::from_path(&args.path, &args.filter, resize_args)?;
     if let Some(path) = &args.output {
