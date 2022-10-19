@@ -51,6 +51,7 @@ impl AsciiImage {
         for i in &self.image {
             f.write(format!("{}\n", i).as_bytes()).with_context(|| "Failed to write to file")?;
         }
+        f.flush()?;
         Ok(())
     }
 
